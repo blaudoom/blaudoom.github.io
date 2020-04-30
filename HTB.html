@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <!-- Basic Page Needs
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta charset="utf-8">
+  <title>Useful basics when starting HTB</title>
+
+
+  <!-- Mobile Specific Metas
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- FONT
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+
+  <!-- CSS
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="stylesheet" href="css/normalize.css">
+  <link rel="stylesheet" href="css/skeleton.css">
+
+  <!-- Favicon
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="icon" type="image/png" href="images/favicon.png">
+
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+
+
+</head>
+<body>
+
+  <!-- Primary Page Layout
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <div class="container">
+    <div class="row">
+      <div class="eight column" style="margin-top: 5%">
+        <h1>What to know when you start Hackthebox</h1>
+        <p>I've been quite active in the HTB discord, helping people out. And I've come across quite common problems that are not directly HTB related, but instead about common computer knowledge.
+          I have listed here some of the stuff I get asked help on often. This page has no sources (other than my head, and thats not proper) and the information might be "about right", but it works for me and for HTB. 
+        </p>
+
+        <p>This stuff can be learned from <a href="https://overthewire.org/wargames/bandit/">OTW Bandit</a> or <a href="http://pentesterlab.com">Pentesterlab</a> few first badges.</p>
+
+        <h2>Basic computer stuff</h2>
+        
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+
+      <div class="seven column" >
+        <h3>SSH</h3>
+        <p>SSH is a basic encrypted remote terminal connection mostly used in unix systems, but also in other platforms.</p>
+        <p>In HTB, you will notice ssh service being on almost every linux box. I have not come accross a single box where ssh would be the service to exploit.</p>
+        <p>In SSH, most common authentication methods are username/password or username / and rsa-key. In the case of an rsa-key. <br/>
+          If you are authenticating with a password. you are connecting like:
+          <pre class="prettyprint">ssh user@server.htb</pre>
+          The ssh client will ask you for the login password of the user.<br/>
+          If you are using a private/public -keypair for authentication:<br/>
+           The client side needs the private key, and the public key is saved on the host server. <br/>
+            When the client tries to connect to the server, it will use the private key for example like this:
+             <pre class="prettyprint">ssh -i id_rsa user@server.htb</pre> 
+            where id_rsa is the private key.
+            The ssh client might ask for a password here too. Please see the password prompt if it is asking for the password for the key id_rsa or for the users logon password. If the prompt asks for the id_rsa password, the key is ecnrypted and you need to find 
+            the password, or crack it. If the client prompts for the user's password, the key is either not accepted on server or there was some error. The error is usually presented.
+            <br/>
+            On the same note. If the id_rsa-key is encrypted, and you manage to crack it, the password is not automatically the same as the SSH-password. <strong>They can be the same</strong>, but that is just bad password management from the real or imaginary owner of the key.
+            So after cracking, when you try to login. Remember the command mentioned few lines back instead of trying the password only as the SSH pass and then going to discord that "The password wont work, has someone broken the box?"
+        </p>
+        <h5>Additional notes:</h5>
+        <p>
+            USUALLY the id_rsa resides in /home/[USER]/.ssh , but it does not have to be there. This is the default location where most linux SSH servers and clients look for it. This can be changed in configurations. When not using the -i param in ssh command,
+            the id_rsa here is tried first, if the configs are not changed.
+
+            The id_rsa needs to have strict permissions. <pre class="prettyprint">chmod 700 id_rsa</pre>
+            So only the owner of the file can read it. Otherwise you cannot use it.
+        </p>
+
+        <p>
+          Also one interesting thing is that because people do not know how to use SSH -keys, I often get the question "I got this SSH key, but I cannot decrypt it. How do I decrypt it?"<br/><br/>
+          I have yet to come across a case where I would need to decrypt and SSH key. And truth be told, I have never tried, so I would not know how. 
+        </p>
+
+      </div>
+    </div>
+    <hr/>
+    <div class="row">
+      
+
+      <div class="seven column" style="margin-top: 5%">
+        <h3>sudo</h3>
+        <p>
+          Sudo is a tool on many (but not all) Linux distributions, which allows you to run commands as another user, commonly root. There is a lot of documentation on sudo online, for example:
+          <ul>
+            <li><a href="https://www.sudo.ws/sudo.html">sudo.ws</a></li>
+            <li><a href="https://www.linux.com/tutorials/linux-101-introduction-sudo/">linux.com</a></li>
+          </ul>
+          So, I'm not going to go through a whole sudo tutorial here, but a few selected commands usually needed in CTF.
+          <br/>
+          <code>sudo -l</code> lists the sudo privileges the current user has. If you have anything you can sudo without a password, this command does not require a password either. (Tell me if I'm wrong) <br/>
+          The example output can be like : <code>(ALL) NOPASSWD: /bin/ls</code>. This would mean that the command ls is executable as any other user without a password. <br/>
+          The commands defined in sudo are quite
+        </p> 
+      </div>
+    </div>
+    <hr/>
+    <div class="row">
+
+      <div class="row">      
+        <div class="seven column" style="margin-top: 5%">
+          <h3><q>There is an URL like megacorp.htb, but my browser can't find it.</q></h3>
+          <p>
+             Usually URLs are resolved with a DNS server. Your system has a DNS-server configured. When you ask for an url like google.com, your system will ask the set DNS-server for an IP address to find google.com in.
+             HTB-addresses are not hosted on any DNS-server, so you need to map them manually. The hosts-file maps HOSTS to IP-Adresses. This is the place where it is told where localhost is for example.
+
+            In unix systems, the file is usually /etc/hosts
+            In windows, usually: c:\windows\system32\drivers\etc\hosts
+
+            The format is a host per line. For example
+            <code>127.0.0.1 localhost</code>
+            or
+            <code>10.10.10.197 multimaster.htb</code>
+
+            After adding that line, you can connect to multimaster.htb with any network software that uses domain names, like a browser.
+
+          </p>
+          
+        </div>
+      </div>
+      
+
+      <div class="seven column" style="margin-top: 5%">
+        <h3>Other services than HTTP</h3>
+        <p>In HTB as well as in real life, you will come across services that do not use http protocol. Many of these services have their own clients, for example: as mentioned SSH, also FTP, DNS, DS, SMB, WinRM ... the list is long. <br/>
+        So, before you fall into despair on these services, that "Why wont my firefox open this?". Try to google or check kali (or whatever system you are using) or the protocols documentation on a client or an scanner / exploitation tool for the protocol. <br/>
+        If such a tool or client cannot be found, or the service is unregognized by the scanner or you, try netcat (usually nc on linux or nc.exe on windows) or telnet for connecting to the service.              
+        </p>
+
+        <p>NOTE! scanners like nmap, can usually try to identify the service in question. In nmap the parameter is -sV for service detection</p>
+        
+      </div>
+    </div>
+    <hr>
+
+    <div class="row">
+      <div class="ten column">
+        <h2>Basic HTB pointers</h2>
+      </div>
+    </div>
+    <div class="row">      
+      <div class="seven column" style="margin-top: 5%">
+        <h3>Its <i>never</i> bruteforce!</h3>
+        <p>
+          When you run into a login page, and you dont have the credentials for it, as tempting as letting the computer do all the work, thats not usually the right action. Hackthebox is meant to be a gamified teaching platform. By bruteforcing
+          a password, you are learning quite little. Maybe the one command. Sure, in some places bruteforce will work, as HTB quite often uses simple passwords. But if you bruteforce the login page, you are most likely missing the point of the exercise
+          and making it hard for anyone else to do it correctly either. As a load towards the server, bruteforcing is basically a denial of service (DOS) from a single point. If there are several people, like on public servers, it becomes DDOS ( distributed 
+          denial of service) and then the box will go stuck and everyone will complain. So please do not bruteforce.
+        </p>
+        <p>
+          So why did I wrote never like <i>never</i>? So that we can draw a fine line. Spamming a online login form with a password list or symbol by symbol can be considered bruteforcing. Cracking a hash or a ssh-key with john or hashcat, is not bruteforcing 
+          as far as what we are talking about here. Those actions could also be considered bruteforcing, but they are not disruptive.
+
+          Other actions someone might consider bruteforcing (but I dont): <br/>
+          FUZZING (params, param values, directories, subdomains).<br/>
+          DIRBUSTING (files, directories)
+          
+        </p>
+      </div>
+    </div>
+    <hr/>
+    <div class="row">      
+      <div class="seven column" style="margin-top: 5%">
+        <h3><q>I'm trying to run this and that from my smb server but it disconnects as soon as it connects</q></h3>
+        <p>
+            If you are trying to run a reverse-shell or a another piece of software remotely by accessing your samba-share from the victim windows host, do not use the impacket's smb-server. <br>
+            The smb-server in inmpacket seems to work well for trasferring files, but not so well for running files. My guess is, that it does not handle open pipes well, just a guess. <br/>
+            My go-to solution is to use the actual samba-server from package manager (apt in kali).
+        </p>
+        
+      </div>
+    </div>
+    
+  </div>
+
+<!-- End Document
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+</body>
+</html>

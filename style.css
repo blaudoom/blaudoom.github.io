@@ -1,0 +1,16 @@
+
+body {
+    background-color: blanchedalmond;
+}
+
+.content {
+  
+
+}
+
+.navigation {
+    position: fixed;
+    left: 0;
+    width: 10%;
+    border-right: solid black 3px;
+}
